@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # The NestJS Gateway & Worker
+  app:
+    build: .
+    container_name: fincart-gateway
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+      - redis
+    restart: always
+
+  # Redis (Requirement #2: Redis-backed queueing)
+  redis:
+    image: redis:7-alpine
+    container_name: fincart-redis
+    ports:
+      - "6379:6379"
+
+  # MongoDB (Requirement #3: Stateful Data)
+  mongo:
+    image: mongo:6
+    container_name: fincart-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=fincart_admin
+      - MONGO_INITDB_ROOT_PASSWORD=super_secret_password
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
