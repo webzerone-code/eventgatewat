@@ -14,7 +14,7 @@ export class GatewayTestingController {
     const providerId = 'DHL';
     const body = JSON.stringify({
       event_id: 'evt_dhl_1008',
-      tracking_id: 'JD01460000223351',
+      tracking_id: 'JD01460000223357',
       status: 'ARRIVED_AT_TRANSIT_FACILITY',
       location: 'Dubai, AE',
       timestamp: '2024-03-20T14:30:00Z',

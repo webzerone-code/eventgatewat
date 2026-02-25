@@ -41,13 +41,36 @@ export class EventProcessor extends WorkerHost {
       },
       { upsert: true, returnDocument: 'after' },
     );
+    // let shipment = await this.shipmentModel.findOne({ tracking_id, carrier });
+    // if (!shipment) {
+    //   shipment = new this.shipmentModel({
+    //     tracking_id,
+    //     carrier,
+    //     processedEvents: [
+    //       {
+    //         event_id: event_id,
+    //         status: status,
+    //         location: location,
+    //         timestamp: timestamp,
+    //       },
+    //     ],
+    //   });
+    // }
+    //
+    // const exists = shipment.processedEvents.some(
+    //   (e) => e.event_id === event_id,
+    // );
+    // if (!exists) {
+    //   shipment.processedEvents.push({ event_id, status, location, timestamp });
+    //   await shipment.save(); // <--- If this fails, the error message is VERY detailed
+    // }
 
-    if (!result) {
-      this.logger.warn(
-        `Duplicate detected in Worker for Event: ${event_id}. Skipping.`,
-      );
-      return { status: 'skipped', reason: 'idempotency_hit' };
-    }
+    // if (!result) {
+    //   this.logger.warn(
+    //     `Duplicate detected in Worker for Event: ${event_id}. Skipping.`,
+    //   );
+    //   return { status: 'skipped', reason: 'idempotency_hit' };
+    // }
 
     this.logger.log(`Success: Shipment ${tracking_id} updated to ${status}`);
     return { status: 'completed' };
