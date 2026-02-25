@@ -23,6 +23,8 @@ export class GatewayService {
       const isNew = await this.redis.set(lockKey, 'true', 'EX', 86400, 'NX');
       if (!isNew) return;
 
+      webhookRequest.carrier = 'DHL';
+
       await this.eventQueue.add('dhl-webhook', webhookRequest, {
         jobId: webhookRequest.eventId,
         attempts: 5,

@@ -4,15 +4,16 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { Exclude } from 'class-transformer';
 
 export class DhlDto {
   @IsString()
   @IsNotEmpty()
-  eventId: string;
+  tracking_id: string;
 
   @IsString()
   @IsNotEmpty()
-  tracking_id: string;
+  eventId: string;
 
   @IsString()
   @IsNotEmpty()
@@ -25,4 +26,7 @@ export class DhlDto {
   @IsDateString()
   @IsOptional()
   timestamp?: string;
+
+  @Exclude()
+  carrier?: string;
 }

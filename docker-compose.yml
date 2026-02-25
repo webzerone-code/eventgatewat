@@ -30,6 +30,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=fincart_admin
       - MONGO_INITDB_ROOT_PASSWORD=super_secret_password
+      - MONGO_INITDB_DATABASE=fincart
     volumes:
       - mongo-data:/data/db
 

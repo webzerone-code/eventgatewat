@@ -5,10 +5,16 @@ import hmacConfig from '../config/hmac.config';
 import { RedisModule } from '@songkeys/nestjs-redis';
 import RedisConfig from '../config/redis.config';
 import { BullModule } from '@nestjs/bullmq';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ShipmentModule } from './shipment/shipment.module';
+import MongoConfig from '../config/mongo.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [hmacConfig, RedisConfig] }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [hmacConfig, RedisConfig, MongoConfig],
+    }),
     RedisModule.forRootAsync({
       inject: [RedisConfig.KEY],
       useFactory: (rediasConfig: ConfigType<typeof RedisConfig>) => ({
@@ -27,7 +33,14 @@ import { BullModule } from '@nestjs/bullmq';
         },
       }),
     }),
+    MongooseModule.forRootAsync({
+      inject: [MongoConfig.KEY],
+      useFactory: (mongoConfig: ConfigType<typeof MongoConfig>) => ({
+        uri: mongoConfig.uri,
+      }),
+    }),
     GatewayModule,
+    ShipmentModule,
   ],
   controllers: [],
   providers: [],
