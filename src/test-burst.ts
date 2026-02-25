@@ -46,11 +46,11 @@ async function runLoadTest() {
   const avgLatency = totalTime / TOTAL_REQUESTS;
 
   console.log(`\n📊 --- TEST RESULTS ---`);
-  console.log(`⏱️  Total Time: ${totalTime}ms`);
-  console.log(`⚡ Avg Ingestion Latency: ${avgLatency.toFixed(2)}ms`);
-  console.log(`✅ Successful Handshakes (202): ${successCount}`);
+  console.log(` Total Time: ${totalTime}ms`);
+  console.log(`Avg Ingestion Latency: ${avgLatency.toFixed(2)}ms`);
+  console.log(` Successful Handshakes (202): ${successCount}`);
   console.log(
-    `\n💡 Note: Check your Docker logs to watch the Workers process the 2s delay.`,
+    `\n Note: Check your Docker logs to watch the Workers process the 2s delay.`,
   );
 }
 
