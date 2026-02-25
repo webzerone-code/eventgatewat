@@ -19,19 +19,20 @@ export class GatewayService {
   ) {}
   async processDhlWebhook(webhookRequest: DhlDto) {
     try {
-      const lockKey = `idempotency:dhl:${webhookRequest.eventId}`;
+      const lockKey = `dhl:${webhookRequest.event_id}${webhookRequest.tracking_id}`;
       const isNew = await this.redis.set(lockKey, 'true', 'EX', 86400, 'NX');
       if (!isNew) return;
-
       webhookRequest.carrier = 'DHL';
 
       await this.eventQueue.add('dhl-webhook', webhookRequest, {
-        jobId: webhookRequest.eventId,
+        jobId: webhookRequest.event_id,
         attempts: 5,
         backoff: { type: 'exponential', delay: 2000 },
         removeOnComplete: true,
       });
-      this.logger.log(`DHL webhook processed: ${webhookRequest.eventId}`);
+      this.logger.log(
+        `DHL webhook processed: ${webhookRequest.event_id} for tracking_id: ${webhookRequest.tracking_id}`,
+      );
     } catch (error) {
       this.logger.error('Error processing DHL webhook', error);
       throw new ServiceUnavailableException('Gateway Buffer Full');

@@ -39,7 +39,7 @@ export class GatewayController {
       await this.gatewayService.processDhlWebhook(webhookRequest);
     } catch (e) {
       this.logger.error(
-        `Buffer Reject: Event ${webhookRequest.eventId} failed to queue`,
+        `Buffer Reject: Event ${webhookRequest.event_id} failed to queue`,
         e.stack,
       );
       throw new ServiceUnavailableException('Gateway Buffer Full');

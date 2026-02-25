@@ -13,7 +13,7 @@ export class DhlDto {
 
   @IsString()
   @IsNotEmpty()
-  eventId: string;
+  event_id: string;
 
   @IsString()
   @IsNotEmpty()
@@ -28,5 +28,6 @@ export class DhlDto {
   timestamp?: string;
 
   @Exclude()
+  @IsOptional()
   carrier?: string;
 }
