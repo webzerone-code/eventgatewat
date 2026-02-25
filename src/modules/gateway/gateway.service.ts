@@ -29,6 +29,7 @@ export class GatewayService {
         attempts: 5,
         backoff: { type: 'exponential', delay: 2000 },
         removeOnComplete: true,
+        removeOnFail: false,
       });
       this.logger.log(
         `DHL webhook processed: ${webhookRequest.event_id} for tracking_id: ${webhookRequest.tracking_id}`,
