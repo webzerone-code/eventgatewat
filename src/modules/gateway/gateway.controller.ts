@@ -19,17 +19,17 @@ import { DhlDto } from './dto/dhl.dto';
 export class GatewayController {
   private readonly logger = new Logger(GatewayController.name);
   constructor(private readonly gatewayService: GatewayService) {}
-  @Carrier('DHL')
-  @Get('testing')
-  testingDecorator() {
-    return 'testing';
-  }
-
-  @Carrier('DHL')
-  @Post('testing')
-  testingPost() {
-    return 'testing';
-  }
+  // @Carrier('DHL')
+  // @Get('testing')
+  // testingDecorator() {
+  //   return 'testing';
+  // }
+  //
+  // @Carrier('DHL')
+  // @Post('testing')
+  // testingPost() {
+  //   return 'testing';
+  // }
 
   @Carrier('DHL')
   @Post('dhl-webhook')
