@@ -39,4 +39,14 @@ export class GatewayService {
       throw new ServiceUnavailableException('Gateway Buffer Full');
     }
   }
+  async retryFailed() {
+    const failedJobs = await this.eventQueue.getFailed();
+
+    await Promise.all(failedJobs.map((job) => job.retry()));
+
+    return {
+      status: 'success',
+      retriedCount: failedJobs.length,
+    };
+  }
 }

@@ -45,4 +45,8 @@ export class GatewayController {
       throw new ServiceUnavailableException('Gateway Buffer Full');
     }
   }
+  @Get('retry')
+  async retryFailed() {
+    return this.gatewayService.retryFailed();
+  }
 }
