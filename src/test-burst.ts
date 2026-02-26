@@ -1,8 +1,8 @@
 import { createHmac } from 'crypto';
-import axios from 'axios'; // or use 'node-fetch'
+import axios from 'axios';
 
-// CONFIGURATION - Ensure these match your .env exactly
-const TARGET_URL = 'http://localhost:3000/gateway/dhl-webhook';
+const HOST = process.env.SERVICE_HOST || 'localhost';
+const TARGET_URL = `http://${HOST}:3000/gateway/dhl-webhook`;
 const SECRET = 'DHL_HMAC_SECRET_KEY';
 const TOTAL_REQUESTS = 1000;
 async function runLoadTest() {
@@ -19,7 +19,6 @@ async function runLoadTest() {
       timestamp: new Date().toISOString(),
     });
 
-    // 2. Generate the HMAC Signature (Requirement #1)
     const signature = createHmac('sha256', SECRET)
       .update(payload)
       .digest('hex');
@@ -30,13 +29,12 @@ async function runLoadTest() {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          DHL_Header: signature, // Matches your Guard's requirement
+          DHL_Header: signature,
         },
       })
-      .catch((err) => err.response); // Catch errors to count them later
+      .catch((err) => err.response);
   });
 
-  // 4. Execute all 100 at the SAME time
   const responses = await Promise.all(tasks);
   const endTime = Date.now();
 
