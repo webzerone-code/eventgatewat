@@ -6,6 +6,9 @@ import { BullModule } from '@nestjs/bullmq';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Shipment, ShipmentSchema } from '../shipment/schemas/shipment.schema';
 import { EventProcessor } from './processors/event.processor';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import RedisConfig from '../../config/redis.config';
+import { ConfigType } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -14,6 +17,16 @@ import { EventProcessor } from './processors/event.processor';
     }),
     MongooseModule.forFeature([
       { name: Shipment.name, schema: ShipmentSchema },
+    ]),
+    ClientsModule.registerAsync([
+      {
+        name: 'REDIS_TRANSIT',
+        inject: [RedisConfig.KEY],
+        useFactory: (cfg: ConfigType<typeof RedisConfig>) => ({
+          transport: Transport.REDIS,
+          options: { host: cfg.REDIS_HOST, port: cfg.REDIS_PORT },
+        }),
+      },
     ]),
   ],
   controllers: [GatewayController, GatewayTestingController],

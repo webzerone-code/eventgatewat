@@ -2,8 +2,9 @@ import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Logger } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { Shipment } from '../../shipment/schemas/shipment.schema';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Processor('event-orchestration') // Must match the name in GatewayModule
 export class EventProcessor extends WorkerHost {
@@ -11,6 +12,7 @@ export class EventProcessor extends WorkerHost {
 
   constructor(
     @InjectModel(Shipment.name) private shipmentModel: Model<Shipment>,
+    @Inject('REDIS_TRANSIT') private readonly redisClient: ClientProxy,
   ) {
     super();
   }
@@ -51,5 +53,11 @@ export class EventProcessor extends WorkerHost {
     this.logger.error(
       `${job.id} failed permanently after 5 attempts. Error: ${error.message}`,
     );
+  }
+  @OnWorkerEvent('completed')
+  onCompleted(job: Job) {
+    this.logger.log(`${job.id} completed successfully`);
+    this.redisClient.emit('shipment.processed', job.data);
+    //this.redisClient.send('shipment.processed', job.data);
   }
 }
